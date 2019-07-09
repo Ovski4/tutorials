@@ -7,6 +7,8 @@ Usage
 Run
 
 ```bash
+git clone https://github.com/Ovski4/tutorials.git
+cd docker-vscode-php-xdebug
 docker-compose up -d
 ```
 
