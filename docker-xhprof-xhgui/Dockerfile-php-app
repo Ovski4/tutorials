@@ -1,0 +1,26 @@
+FROM php:7.1-fpm-alpine
+
+# php configuration
+COPY php.ini /usr/local/etc/php/
+
+# install the xhprof extension to profile requests
+RUN curl "https://github.com/tideways/php-xhprof-extension/archive/v4.1.7.tar.gz" -fsL -o ./php-xhprof-extension.tar.gz && \
+    tar xf ./php-xhprof-extension.tar.gz && \
+    cd php-xhprof-extension-4.1.7 && \
+    apk add --update --no-cache build-base autoconf && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install
+RUN rm -rf ./php-xhprof-extension.tar.gz ./php-xhprof-extension-4.1.7
+RUN docker-php-ext-enable tideways
+
+# install mongodb extension. The xhgui-collector will send xprof data to mongo
+RUN apk add --no-cache autoconf alpine-sdk
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
+# install xhgui
+# we just need the perftools/xhgui-collector but the installation is much easier this way
+RUN git clone https://github.com/perftools/xhgui.git /var/xhgui
+RUN cd /var/xhgui && php install.php
+COPY xhgui_config.php /var/xhgui/config/config.php

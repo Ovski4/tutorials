@@ -1,0 +1,7 @@
+FROM nginx:1.12.2
+
+RUN apt-get update
+RUN apt-get install -y git
+
+RUN git clone https://github.com/perftools/xhgui.git /var/xhgui
+RUN chmod -R 0777 /var/xhgui/cache

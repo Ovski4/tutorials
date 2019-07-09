@@ -1,0 +1,11 @@
+FROM php:7.1-fpm-alpine
+
+RUN apk add --no-cache git
+
+RUN apk add --no-cache autoconf alpine-sdk zlib-dev
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+RUN docker-php-ext-install zip # useful for composer
+
+RUN git clone https://github.com/perftools/xhgui.git /var/xhgui
+RUN cd /var/*xhgui && php install.php
+COPY xhgui_config.php /var/xhgui/config/config.php
