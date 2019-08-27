@@ -11,6 +11,9 @@ Usage
 Run
 
 ```bash
+git clone https://github.com/Ovski4/tutorials.git
+cd localstack-part-1
+docker network create localstack-tutorial
 docker-compose up -d
 docker-compose logs -f localstack
 ```
@@ -49,7 +52,7 @@ aws lambda create-function \
 
 Invoke the function multiple times and scan the table to see new items and their counters being incremented:
 
-``bash
+```bash
 aws lambda invoke --function-name counter --endpoint-url=http://localhost:4574 --payload '{"id": "test"}' output.txt
 aws dynamodb scan --endpoint-url http://localhost:4569 --table-name table_1
 
