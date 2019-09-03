@@ -1,6 +1,8 @@
 Profile PHP applications with xhgui and xhprof on docker
 ========================================================
 
+[Detailed tutorial here.](https://baptiste.bouchereau.pro/tutorial/profile-php-applications-with-xhgui-and-xhprof-on-docker/)
+
 Usage
 -----
 

@@ -1,6 +1,8 @@
 Debug PHP applications running on docker with vscode
 ====================================================
 
+[Detailed tutorial here.](https://baptiste.bouchereau.pro/tutorial/debug-php-application-running-on-docker-with-vscode/)
+
 Usage
 -----
 

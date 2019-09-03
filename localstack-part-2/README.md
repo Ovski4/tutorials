@@ -1,6 +1,8 @@
 Deploy AWS resources in localstack with Terraform
 =================================================
 
+[Detailed tutorial here.](https://baptiste.bouchereau.pro/tutorial/deploy-localstack-resources-with-terraform/)
+
 An example on how to use Terraform to deploy localstack resources that mock AWS services. The following instructions focus on how to deploy:
 * a dynamodb table
 * a lambda reading data and putting data to this table

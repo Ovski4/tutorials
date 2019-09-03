@@ -1,6 +1,8 @@
 Replicate AWS in local with localstack
 ======================================
 
+[Detailed tutorial here.](https://baptiste.bouchereau.pro/tutorial/mock-aws-services-with-localstack/)
+
 An example on how to use localstack to mock AWS services. The following instructions focus on how to run localstack and deploy:
 * a dynamodb table
 * a lambda reading data and putting data to this table
