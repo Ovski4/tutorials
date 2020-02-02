@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+
+  traefik:
+    image: traefik:v2.1
+    ports:
+      - 80:80
+    command:
+      - --entrypoints.http.address=:80
+      - --providers.docker.exposedByDefault=false
+      - --log.level=DEBUG
+      - --api=true
+      - --api.dashboard=true
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.traefik-dashboard-http-router.entrypoints: http
+      traefik.http.routers.traefik-dashboard-http-router.rule: Host(`traefik-ui.local`)
+      traefik.http.routers.traefik-dashboard-http-router.service: api@internal
+      traefik.http.middlewares.traefik-dashboard-auth.basicauth.users: traefik_user:$$apr1$$epoKf5li$$QfTMJZOCS/halv3CiIUEu0
+      traefik.http.routers.traefik-dashboard-http-router.middlewares: traefik-dashboard-auth
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    image: nginx:1.17.8-alpine
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.nginx-http-router.entrypoints: http
+      traefik.http.routers.nginx-http-router.rule: Host(`nginx.local`)
+      traefik.http.services.nginx-service.loadbalancer.server.port: 80
