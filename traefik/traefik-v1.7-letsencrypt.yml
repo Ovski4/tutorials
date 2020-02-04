@@ -6,24 +6,30 @@ services:
     image: traefik:v1.7
     ports:
       - 80:80
+      - 443:443
     command:
       - --entrypoints=Name:http Address::80
+      - --entrypoints=Name:https Address::443 TLS
       - --docker
       - --docker.exposedbydefault=false
       - --logLevel=DEBUG
-      - --api
-    labels:
-      traefik.port: 8080
-      traefik.frontend.rule: Host:traefik-ui.local
-      traefik.enable: 'true'
-      traefik.frontend.auth.basic.users: traefik_user:$$apr1$$epoKf5li$$QfTMJZOCS/halv3CiIUEu0
+      - --acme.email=you@mail.com
+      - --acme.storage=/etc/traefik/acme.json
+      - --acme.entryPoint=http
+      - --acme.onHostRule=true
+      - --acme.httpchallenge.entrypoint=http
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - conf:/etc/traefik
 
   nginx:
     image: nginx:1.17.8-alpine
     labels:
       traefik.enable: 'true'
       traefik.frontend.rule: Host:nginx.local
-      traefik.frontend.entryPoints: http
+      traefik.frontend.entryPoints: http,https
+      traefik.frontend.redirect.entryPoint: https
       traefik.port: 80
+
+volumes:
+  conf:

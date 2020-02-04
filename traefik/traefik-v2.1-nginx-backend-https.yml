@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+
+  traefik:
+    image: traefik:v2.1
+    ports:
+      - 80:80
+      - 443:443
+    command:
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --providers.docker.exposedByDefault=false
+      - --log.level=DEBUG
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    image: nginx:1.17.8-alpine
+    labels:
+      traefik.enable: 'true'
+      traefik.http.services.nginx-service.loadbalancer.server.port: 80
+      traefik.http.middlewares.nginx-redirect.redirectscheme.scheme: https
+      traefik.http.routers.nginx-http-router.entrypoints: http
+      traefik.http.routers.nginx-http-router.rule: Host(`nginx.local`)
+      traefik.http.routers.nginx-http-router.middlewares: nginx-redirect
+      traefik.http.routers.nginx-https-router.entrypoints: https
+      traefik.http.routers.nginx-https-router.tls: 'true'
+      traefik.http.routers.nginx-https-router.rule: Host(`nginx.local`)

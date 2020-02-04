@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+
+  traefik:
+    image: traefik:v2.1
+    ports:
+      - 80:80
+    command:
+      - --entrypoints.http.address=:80
+      - --providers.docker.exposedByDefault=false
+      - --log.level=DEBUG
+      - --providers.docker.swarmMode=true
+      - --providers.docker.network=traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+
+  nginx:
+    image: nginx:1.17.8-alpine
+    deploy:
+      labels:
+        traefik.enable: 'true'
+        traefik.http.routers.nginx-http-router.entrypoints: http
+        traefik.http.routers.nginx-http-router.rule: Host(`nginx.local`)
+        traefik.http.services.nginx-service.loadbalancer.server.port: 80
+    networks:
+      - traefik
+
+networks:
+
+  traefik:
+    driver: overlay
+    external: true
+    attachable: true
+  

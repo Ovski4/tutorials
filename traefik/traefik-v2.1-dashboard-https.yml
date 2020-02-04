@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+
+  traefik:
+    image: traefik:v2.1
+    ports:
+      - 80:80
+      - 443:443
+    command:
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --providers.docker.exposedByDefault=false
+      - --log.level=DEBUG
+      - --api=true
+      - --api.dashboard=true
+    labels:
+      traefik.enable: 'true'
+      traefik.http.middlewares.traefik-dashboard-auth.basicauth.users: traefik_user:$$apr1$$epoKf5li$$QfTMJZOCS/halv3CiIUEu0
+      traefik.http.middlewares.traefik-dashboard-redirect.redirectscheme.scheme: https
+      traefik.http.services.traefik-dashboard-service.loadbalancer.server.port: 9999
+      traefik.http.routers.traefik-dashboard-http-router.entrypoints: http
+      traefik.http.routers.traefik-dashboard-http-router.rule: Host(`traefik-ui.local`)
+      traefik.http.routers.traefik-dashboard-http-router.middlewares: traefik-dashboard-redirect
+      traefik.http.routers.traefik-dashboard-https-router.service: api@internal
+      traefik.http.routers.traefik-dashboard-https-router.entrypoints: https
+      traefik.http.routers.traefik-dashboard-https-router.tls: 'true'
+      traefik.http.routers.traefik-dashboard-https-router.rule: Host(`traefik-ui.local`)
+      traefik.http.routers.traefik-dashboard-https-router.middlewares: traefik-dashboard-auth
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

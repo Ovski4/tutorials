@@ -6,15 +6,21 @@ services:
     image: traefik:v1.7
     ports:
       - 80:80
+      - 443:443
     command:
       - --entrypoints=Name:http Address::80
+      - --entrypoints=Name:https Address::443 TLS
       - --docker
+      - --docker.watch
       - --docker.exposedbydefault=false
       - --logLevel=DEBUG
       - --api
     labels:
+      traefik.enable: 'true'
       traefik.port: 8080
       traefik.frontend.rule: Host:traefik-ui.local
-      traefik.enable: 'true'
+      traefik.frontend.auth.basic.users: traefik_user:$$apr1$$epoKf5li$$QfTMJZOCS/halv3CiIUEu0
+      traefik.frontend.redirect.entryPoint: https
+      traefik.frontend.entryPoints: http,https
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
