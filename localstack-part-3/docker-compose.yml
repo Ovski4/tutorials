@@ -18,8 +18,6 @@ services:
     container_name: localstack
     ports:
       - 8080:8080 # webui
-      - 4569:4569 # dynamodb
-      - 4574:4574 # lamba
     environment:
       - DATA_DIR=/tmp/localstack/data
       - DEBUG=1
