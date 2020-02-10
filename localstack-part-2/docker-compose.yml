@@ -13,7 +13,7 @@ volumes:
 services:
 
   localstack:
-    image: localstack/localstack:0.9.0
+    image: localstack/localstack:0.10.7
     ports:
       - 8080:8080 # webui
       - 4569:4569 # dynamodb

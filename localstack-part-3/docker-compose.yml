@@ -13,7 +13,9 @@ volumes:
 services:
 
   localstack:
-    image: localstack/localstack:0.10.7
+    build:
+      context: localstack
+    container_name: localstack
     ports:
       - 8080:8080 # webui
       - 4569:4569 # dynamodb
@@ -30,3 +32,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - localstack:/tmp/localstack/data
+    depends_on:
+      - docker-events-listener
+
+  docker-events-listener:
+    build:
+      context: docker-events-listener-build # 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # 4
+      - ./terraform:/opt/terraform/
+    environment:
+      APPLY_TERRAFORM_ON_START: "true"
+      INVOKE_LAMBDAS_ON_START: counter

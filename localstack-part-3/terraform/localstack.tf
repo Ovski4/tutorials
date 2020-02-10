@@ -1,3 +1,9 @@
+terraform {
+  required_providers {
+    aws = "~> 2.39.0"
+  }
+}
+
 provider "aws" {
   region                      = "ap-southeast-2"
   access_key                  = "fake"
@@ -7,8 +13,8 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    dynamodb = "http://localhost:4569"
-    lambda   = "http://localhost:4574"
+    dynamodb = "http://localstack:4569"
+    lambda   = "http://localstack:4574"
   }
 }
 

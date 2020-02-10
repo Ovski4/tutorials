@@ -1,5 +1,4 @@
 .terraform/
-*.zip
 output.txt
 terraform.tfstate
 terraform.tfstate.backup
