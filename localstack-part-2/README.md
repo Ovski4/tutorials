@@ -13,6 +13,8 @@ Usage
 Run
 
 ```bash
+git clone https://github.com/Ovski4/tutorials.git
+cd localstack-part-2
 docker network create localstack-tutorial
 docker-compose up -d
 docker-compose logs -f localstack

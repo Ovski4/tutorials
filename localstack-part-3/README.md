@@ -10,10 +10,13 @@ Usage
 
 Run
 
+
 ```bash
+git clone https://github.com/Ovski4/tutorials.git
+cd localstack-part-3
 docker network create localstack-tutorial
 docker-compose up -d
-docker-compose logs -f localstack
+docker-compose logs -f docker-events-listener
 ```
 
 Wait for the resources to be deployed, then invoke the lambda multiple times and scan the table to see new items and their counters being incremented:
