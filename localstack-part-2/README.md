@@ -31,8 +31,6 @@ cd ..
 Wait for set up to be done, then apply the Terraform configuration:
 
 ```bash
-git clone https://github.com/Ovski4/tutorials.git
-cd localstack-part-2
 terraform init
 terraform plan
 terraform apply --auto-approve
