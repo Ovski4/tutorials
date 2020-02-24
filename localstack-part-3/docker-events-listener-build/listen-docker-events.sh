@@ -10,6 +10,7 @@ do
     echo "$container_name: status = ${event}"
 
     if [[ $APPLY_TERRAFORM_ON_START == "true" ]] && [[ $container_name = "localstack" ]] && [[ $event == "start" ]]; then
+        sleep 20 # let localstack some time to start
         terraform init
         terraform apply --auto-approve
         echo "The terraform configuration has been applied."

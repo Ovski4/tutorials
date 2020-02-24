@@ -10,7 +10,6 @@ Usage
 
 Run
 
-
 ```bash
 git clone https://github.com/Ovski4/tutorials.git
 cd localstack-part-3
@@ -22,9 +21,9 @@ docker-compose logs -f docker-events-listener
 Wait for the resources to be deployed, then invoke the lambda multiple times and scan the table to see new items and their counters being incremented:
 
 ```bash
-aws lambda invoke --function-name counter --endpoint-url=http://localhost:4574 --payload '{"id": "test"}' output.txt
-aws dynamodb scan --endpoint-url http://localhost:4569 --table-name table_1
+docker-compose exec docker-events-listener aws lambda invoke --function-name counter --endpoint-url=http://localstack:4574 --payload '{"id": "test"}' output.txt
+docker-compose exec docker-events-listener aws dynamodb scan --endpoint-url http://localstack:4569 --table-name table_1
 
-aws lambda invoke --function-name counter --endpoint-url=http://localhost:4574 --payload '{"id": "test2"}' output.txt
-aws dynamodb scan --endpoint-url http://localhost:4569 --table-name table_1
+docker-compose exec docker-events-listener aws lambda invoke --function-name counter --endpoint-url=http://localstack:4574 --payload '{"id": "test2"}' output.txt
+docker-compose exec docker-events-listener aws dynamodb scan --endpoint-url http://localstack:4569 --table-name table_1
 ```
