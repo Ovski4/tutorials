@@ -6,4 +6,3 @@ COPY php.ini /usr/local/etc/php/
 # Xdebug configuration
 RUN apk add --no-cache $PHPIZE_DEPS # dependencies needed by pecl
 RUN pecl install xdebug && docker-php-ext-enable xdebug
-EXPOSE 9000

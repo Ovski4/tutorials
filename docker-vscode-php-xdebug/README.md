@@ -27,7 +27,7 @@ In vscode install the **PHP Debug** extension by Felix Becker. Then select the `
             "name": "Listen for XDebug",
             "type": "php",
             "request": "launch",
-            "port": 9000,
+            "port": 9099,
             "pathMappings": {
                 "/var/www/html/": "${workspaceRoot}"
             }
