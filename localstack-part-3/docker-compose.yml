@@ -13,8 +13,7 @@ volumes:
 services:
 
   localstack:
-    build:
-      context: localstack
+    image: localstack/localstack:0.10.8
     container_name: localstack
     ports:
       - 8080:8080 # webui
@@ -27,6 +26,7 @@ services:
       - PORT_WEB_UI=8080
       - SERVICES=lambda,dynamodb
       - LAMBDA_DOCKER_NETWORK=localstack-tutorial
+      - LAMBDA_REMOVE_CONTAINERS=false
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - localstack:/tmp/localstack/data
