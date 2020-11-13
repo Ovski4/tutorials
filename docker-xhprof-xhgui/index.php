@@ -2,8 +2,10 @@
 
 <ul>
     <?php
-        define('XHGUI_CONFIG_DIR', '/var/xhgui/config/');
-        require_once '/var/xhgui/vendor/perftools/xhgui-collector/external/header.php';
+        require '/var/xhgui/vendor/autoload.php';
+        $config = include '/var/xhgui/config/config.php';
+        $profiler = new \Xhgui\Profiler\Profiler($config);
+        $profiler->start();
 
         for ($i = 0; $i < 10; $i++) {
             echo sprintf("<li>%s * 5 = %s</li>", $i, $i*5);

@@ -10,7 +10,7 @@ services:
       - ./:/var/www/html
 
   nginx_app:
-    image: nginx:1.17.0-alpine
+    image: nginx:1.18.0-alpine
     ports:
       - 8080:80
     volumes:
@@ -30,10 +30,8 @@ services:
       dockerfile: Dockerfile-nginx-xhgui
     ports:
       - 8081:80
-    volumes:
-      - ./xhgui.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php_xhgui
 
   mongo:
-    image: mongo:3.7.9
+    image: mongo:4.4.1
