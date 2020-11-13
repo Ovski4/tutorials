@@ -33,4 +33,3 @@ networks:
   traefik:
     driver: overlay
     external: true
-    attachable: true
