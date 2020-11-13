@@ -10,7 +10,7 @@ services:
       - ./:/var/www/html
 
   nginx_app:
-    image: nginx:1.17.0-alpine
+    image: nginx:1.18.0-alpine
     ports:
       - 8080:80
     volumes:
