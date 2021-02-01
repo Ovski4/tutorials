@@ -25,9 +25,11 @@ docker-compose -f docker-compose-full-stack.yml up -d
 
 4. Browse `http://localhost:5601/`. You might have to wait a few minutes while Kibana set things up. You can then click on '**Explore on my own**'.
 
-5. Then browse `http://localhost:8085/`. The http request will trigger some logs to be send to elasticsearch.
+5. Then browse `http://localhost:8085/`. You should see this page :
 
 ![Screenshot nginx page](nginx-page.png "Screenshot nginx page")
+
+The http request will trigger some logs to be send to elasticsearch.
 
 6. Come back to kibana at `http://localhost:5601/`. In the left panel, click on **Discover** under the **Kibana section** and create a new **index pattern**. You should see the filebeat index appearing in the select box. In the **Index pattern name** text field, type **filebeat-***
 
