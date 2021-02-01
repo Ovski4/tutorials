@@ -1,0 +1,36 @@
+version: '3.7'
+
+volumes:
+
+  elasticsearch_data:
+
+services:
+
+  nginx:
+    image: nginx:1.18.0-alpine
+    ports:
+      - 8085:80
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+    volumes:
+      - ./elasticsearch/data-full-stack:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.10.1
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml

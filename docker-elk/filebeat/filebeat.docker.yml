@@ -1,0 +1,26 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      templates:
+        - condition:
+            contains:
+              docker.container.image: nginx
+          config:
+            - module: nginx
+              access:
+                enabled: true
+                input:
+                  type: container
+                  stream: stdout
+                  paths:
+                    - '/var/lib/docker/containers/${data.docker.container.id}/*.log'
+              error:
+                enabled: true
+                input:
+                  type: container
+                  stream: stderr
+                  paths:
+                    - '/var/lib/docker/containers/${data.docker.container.id}/*.log'
+
+output.elasticsearch:
+  hosts: 'elasticsearch:9200'

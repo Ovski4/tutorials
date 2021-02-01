@@ -2,3 +2,5 @@
 output.txt
 terraform.tfstate
 terraform.tfstate.backup
+docker-elk/elasticsearch/data-sandbox/
+docker-elk/elasticsearch/data-full-stack/
