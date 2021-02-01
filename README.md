@@ -11,3 +11,4 @@ The code from some of [my blog](https://baptiste.bouchereau.pro/) posts.
 - [A guide to localstack (part 2) - Deploying resources with Terraform](localstack-part-2)
 - [A guide to localstack (part 3) - Automatic provisioning](localstack-part-3)
 - [Configuration differences between traefik v2 and traefik v1 (with the docker provider)](traefik)
+- [Nginx log analysis with ELK running on docker](docker-elk)
