@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+
+  en:
+    image: jekyll/jekyll
+    volumes:
+      - ./sites/en:/srv/jekyll
+      - ./sites/common/_includes:/srv/jekyll/_includes
+      - ./sites/common/_layouts:/srv/jekyll/_layouts
+      - ./sites/common/Gemfile:/srv/jekyll/Gemfile
+      - ./sites/common/Gemfile.lock:/srv/jekyll/Gemfile.lock
+      - ./sites/common/public:/srv/jekyll/public
+      - ./local_plugins:/srv/local_plugins
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.nginx-http-router-en.entrypoints: http
+      traefik.http.routers.nginx-http-router-en.rule: Host(`baptiste.bouchereau.pro`)
+      traefik.http.services.nginx-service-en.loadbalancer.server.port: 4001
+    depends_on:
+      - traefik
+    command: jekyll serve --port 4001
+
