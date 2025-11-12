@@ -13,6 +13,7 @@ NGROK_PID=""
 NGROK_PUBLIC_URL=""
 ACCESS_TOKEN=""
 PAYPAL_WEBHOOK_URL=""
+CLEANUP_DONE=0
 
 checkForDependencies() {
   if ! command -v jq >/dev/null 2>&1; then
@@ -91,13 +92,33 @@ updatePayPalWebhookUrl() {
   fi
 }
 
+killNgrokProcess() {
+  if [[ -n "${NGROK_PID:-}" ]]; then
+    echo "- Killing ngrok process (PID $NGROK_PID)..."
+    kill "$NGROK_PID" >/dev/null 2>&1 || true
+  fi
+}
+
+cleanupOnExit() {
+  if [[ "$CLEANUP_DONE" -eq 1 ]]; then
+    return;
+  fi
+
+  CLEANUP_DONE=1
+
+  echo "Cleaning up..."
+
+  killNgrokProcess
+
+  echo "All done. Exiting."
+}
+
 checkForDependencies
 getPayPalAccessToken
 startNgrok
 getNgrokPublicUrl
 updatePayPalWebhookUrl
 
-# Ensure we clean up ngrok when this script exits
-trap 'echo "Cleaning up: killing ngrok process (PID $NGROK_PID)..."; kill "$NGROK_PID" >/dev/null 2>&1 || true' EXIT
+trap 'cleanupOnExit' INT TERM EXIT
 
 wait "$NGROK_PID"
