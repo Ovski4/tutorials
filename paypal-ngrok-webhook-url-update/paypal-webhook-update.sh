@@ -72,7 +72,7 @@ updatePayPalWebhookUrl() {
   local body=$(jq -n --arg url "$paypal_webhook_url" '[{op:"replace", path:"/url", value:$url}]')
 
   local response_file="$(mktemp)"
-  local http_code=$(curl -sS -o "$PATCH_RESP_FILE" -w "%{http_code}" -X PATCH \
+  local http_code=$(curl -sS -o "$response_file" -w "%{http_code}" -X PATCH \
     "https://api-m.sandbox.paypal.com/v1/notifications/webhooks/$PAYPAL_WEBHOOK_ID" \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $ACCESS_TOKEN" \
