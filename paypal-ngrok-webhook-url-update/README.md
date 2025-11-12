@@ -67,5 +67,3 @@ chmod +x screenshot-paypal-webhook-update-script.sh
 ```
 
 Run Ctrl+C to terminate.
-
-![Script execution screenshot](screenshot-script.png "Script execution screenshot")
