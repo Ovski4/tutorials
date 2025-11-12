@@ -20,6 +20,8 @@ NGROK_PUBLIC_URL=""
 ACCESS_TOKEN=""
 PAYPAL_WEBHOOK_URL=""
 PAYPAL_WEBHOOK_ID=""
+PAYPAL_API_CLIENT_ID=""
+PAYPAL_API_SECRET=""
 
 checkForDependencies() {
   if ! command -v jq >/dev/null 2>&1; then
@@ -127,7 +129,14 @@ createPayPalWebhook() {
 }
 
 updatePayPalWebhookIdInEnvFile() {
-  sed -i '' -E "s/^PAYPAL_WEBHOOK_ID=.*/PAYPAL_WEBHOOK_ID=$PAYPAL_WEBHOOK_ID/" "$ENV_FILE"
+  if sed --version >/dev/null 2>&1; then
+    # GNU sed (Linux)
+    sed -i -E "s|^PAYPAL_WEBHOOK_ID=.*|PAYPAL_WEBHOOK_ID=${PAYPAL_WEBHOOK_ID}|" "$ENV_FILE"
+  else
+    # BSD sed (macOS)
+    sed -i '' -E "s|^PAYPAL_WEBHOOK_ID=.*|PAYPAL_WEBHOOK_ID=${PAYPAL_WEBHOOK_ID}|" "$ENV_FILE"
+  fi
+
   echo "PAYPAL_WEBHOOK_ID updated in .env file"
 }
 
