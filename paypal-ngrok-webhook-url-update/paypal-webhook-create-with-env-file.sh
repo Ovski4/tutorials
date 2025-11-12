@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # configuration
+ENV_FILE="/path/to/.env"
 LOG_FILE="/tmp/ngrok.log"
 PAYPAL_API_CLIENT_ID=xxxx
 PAYPAL_API_SECRET=xxxx
@@ -37,6 +38,22 @@ checkForDependencies() {
   fi
 }
 
+getPayPalEnvVars() {
+  PAYPAL_API_CLIENT_ID=$(grep -E '^PAYPAL_API_CLIENT_ID=' "$ENV_FILE" | cut -d '=' -f2-)
+  PAYPAL_API_SECRET=$(grep -E '^PAYPAL_API_SECRET=' "$ENV_FILE" | cut -d '=' -f2-)
+  PAYPAL_ORIGINAL_WEBHOOK_ID=$(grep -E '^PAYPAL_WEBHOOK_ID=' "$ENV_FILE" | cut -d '=' -f2-)
+
+  if [ -z "$PAYPAL_API_CLIENT_ID" ] || [ -z "$PAYPAL_API_SECRET" ]; then
+    echo "Missing PAYPAL_API_CLIENT_ID or PAYPAL_API_SECRET in $ENV_FILE"
+    exit 1
+  fi
+
+  if [ -z "${PAYPAL_ORIGINAL_WEBHOOK_ID:-}" ]; then
+    echo "Missing PAYPAL_WEBHOOK_ID in $ENV_FILE"
+    exit 1
+  fi
+}
+
 getPayPalAccessToken() {
   ACCESS_TOKEN=$(curl -s -u "$PAYPAL_API_CLIENT_ID:$PAYPAL_API_SECRET" \
     -d "grant_type=client_credentials" \
@@ -53,6 +70,9 @@ startNgrok() {
 
   ngrok http --host-header=$APP_DOMAIN https://$APP_DOMAIN > "$LOG_FILE" 2>&1 &
   NGROK_PID=$!
+
+  # Ensure we clean up ngrok when this script exits
+  trap 'echo "Cleaning up: killing ngrok process (PID $NGROK_PID)..."; kill "$NGROK_PID" >/dev/null 2>&1 || true' EXIT
 
   # Wait until ngrok’s local API is up
   echo "Waiting for ngrok to start..."
@@ -108,6 +128,11 @@ createPayPalWebhook() {
   echo "Webhook created: ${PAYPAL_WEBHOOK_ID}"
 }
 
+updatePayPalWebhookIdInEnvFile() {
+  sed -i '' -E "s/^PAYPAL_WEBHOOK_ID=.*/PAYPAL_WEBHOOK_ID=$PAYPAL_NEW_WEBHOOK_ID/" "$ENV_FILE"
+  echo "PAYPAL_WEBHOOK_ID updated in .env file"
+}
+
 deletePayPalWebhook() {
   if [[ -z "${PAYPAL_WEBHOOK_ID:-}" ]]; then
     return
@@ -144,10 +169,12 @@ cleanupOnExit() {
 }
 
 checkForDependencies
+getPayPalEnvVars
 getPayPalAccessToken
 startNgrok
 getNgrokPublicUrl
 createPayPalWebhook
+updatePayPalWebhookIdInEnvFile
 
 trap 'cleanupOnExit' INT
 

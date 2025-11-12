@@ -46,9 +46,6 @@ startNgrok() {
   ngrok http --host-header=$APP_DOMAIN https://$APP_DOMAIN > "$LOG_FILE" 2>&1 &
   NGROK_PID=$!
 
-  # Ensure we clean up ngrok when this script exits
-  trap 'echo "Cleaning up: killing ngrok process (PID $NGROK_PID)..."; kill "$NGROK_PID" >/dev/null 2>&1 || true' EXIT
-
   # Wait until ngrok’s local API is up
   echo "Waiting for ngrok to start..."
 
@@ -99,5 +96,8 @@ getPayPalAccessToken
 startNgrok
 getNgrokPublicUrl
 updatePayPalWebhookUrl
+
+# Ensure we clean up ngrok when this script exits
+trap 'echo "Cleaning up: killing ngrok process (PID $NGROK_PID)..."; kill "$NGROK_PID" >/dev/null 2>&1 || true' EXIT
 
 wait "$NGROK_PID"
