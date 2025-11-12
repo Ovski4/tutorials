@@ -3,8 +3,6 @@
 # configuration
 ENV_FILE="/path/to/.env"
 LOG_FILE="/tmp/ngrok.log"
-PAYPAL_API_CLIENT_ID=xxxx
-PAYPAL_API_SECRET=xxxx
 APP_PAYPAL_WEBHOOK_PATH='/paypal-webhook'
 APP_DOMAIN=my-application.local
 EVENT_TYPES=(
@@ -41,14 +39,14 @@ checkForDependencies() {
 getPayPalEnvVars() {
   PAYPAL_API_CLIENT_ID=$(grep -E '^PAYPAL_API_CLIENT_ID=' "$ENV_FILE" | cut -d '=' -f2-)
   PAYPAL_API_SECRET=$(grep -E '^PAYPAL_API_SECRET=' "$ENV_FILE" | cut -d '=' -f2-)
-  PAYPAL_ORIGINAL_WEBHOOK_ID=$(grep -E '^PAYPAL_WEBHOOK_ID=' "$ENV_FILE" | cut -d '=' -f2-)
+  PAYPAL_WEBHOOK_ID=$(grep -E '^PAYPAL_WEBHOOK_ID=' "$ENV_FILE" | cut -d '=' -f2-)
 
   if [ -z "$PAYPAL_API_CLIENT_ID" ] || [ -z "$PAYPAL_API_SECRET" ]; then
     echo "Missing PAYPAL_API_CLIENT_ID or PAYPAL_API_SECRET in $ENV_FILE"
     exit 1
   fi
 
-  if [ -z "${PAYPAL_ORIGINAL_WEBHOOK_ID:-}" ]; then
+  if [ -z "${PAYPAL_WEBHOOK_ID:-}" ]; then
     echo "Missing PAYPAL_WEBHOOK_ID in $ENV_FILE"
     exit 1
   fi
@@ -129,7 +127,7 @@ createPayPalWebhook() {
 }
 
 updatePayPalWebhookIdInEnvFile() {
-  sed -i '' -E "s/^PAYPAL_WEBHOOK_ID=.*/PAYPAL_WEBHOOK_ID=$PAYPAL_NEW_WEBHOOK_ID/" "$ENV_FILE"
+  sed -i '' -E "s/^PAYPAL_WEBHOOK_ID=.*/PAYPAL_WEBHOOK_ID=$PAYPAL_WEBHOOK_ID/" "$ENV_FILE"
   echo "PAYPAL_WEBHOOK_ID updated in .env file"
 }
 
