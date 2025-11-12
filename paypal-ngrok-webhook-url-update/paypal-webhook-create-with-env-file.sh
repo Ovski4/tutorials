@@ -94,7 +94,7 @@ getNgrokPublicUrl() {
 }
 
 createPayPalWebhook() {
-  local paypal_webhook_url="${NGROK_PUBLIC_URL}/paypalhook"
+  local paypal_webhook_url="${NGROK_PUBLIC_URL}${APP_PAYPAL_WEBHOOK_PATH}"
   echo "Creating PayPal webhook with URL: $paypal_webhook_url"
 
   local events_json
@@ -183,7 +183,7 @@ getNgrokPublicUrl
 createPayPalWebhook
 updatePayPalWebhookIdInEnvFile
 
-trap 'cleanupOnExit' INT
+trap 'cleanupOnExit' INT TERM EXIT
 
 echo "Ready to receive webhook events. Press Ctrl+C to terminate."
 
