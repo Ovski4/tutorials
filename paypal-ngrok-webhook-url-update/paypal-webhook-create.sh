@@ -21,6 +21,7 @@ NGROK_PUBLIC_URL=""
 ACCESS_TOKEN=""
 PAYPAL_WEBHOOK_URL=""
 PAYPAL_WEBHOOK_ID=""
+CLEANUP_DONE=0
 
 checkForDependencies() {
   if ! command -v jq >/dev/null 2>&1; then
@@ -133,14 +134,18 @@ killNgrokProcess() {
 }
 
 cleanupOnExit() {
+  if [[ "$CLEANUP_DONE" -eq 1 ]]; then
+    return;
+  fi
+
+  CLEANUP_DONE=1
+
   echo "Cleaning up..."
 
   deletePayPalWebhook
   killNgrokProcess
 
   echo "All done. Exiting."
-
-  exit 0
 }
 
 checkForDependencies
