@@ -1,5 +1,3 @@
-version: '3.7'
-
 volumes:
   mysql:
   data:
@@ -7,27 +5,27 @@ volumes:
 services:
 
   mysql:
-    image: mysql:5.7.24
+    image: mysql:8.4
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       MYSQL_USER: nextcloud
       MYSQL_DATABASE: nextcloud
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
     volumes:
       - mysql:/var/lib/mysql
     secrets:
-      - db_root_password
-      - db_password
+      - mysql_root_password
+      - mysql_password
 
   php:
-    image: nextcloud:15.0.5-fpm-alpine
+    image: nextcloud:32.0.3-fpm-alpine
     volumes:
       - data:/var/www/html
     depends_on:
       - mysql
 
   nginx:
-    image: nginx:1.15.8-alpine
+    image: nginx:1.29.4-alpine
     ports:
       - 8042:80
     volumes:
@@ -37,7 +35,7 @@ services:
       - php
 
   backup_cron:
-    image: ovski/borgbackup-cron:v1.0.0
+    image: ovski/borgbackup-cron:v2.0.0
     volumes:
       - data:/var/docker_volumes/nextcloud/app/data
     environment:
@@ -48,19 +46,19 @@ services:
       LOCAL_FOLDER: /var/docker_volumes/nextcloud
       MYSQL_USER: nextcloud
       MYSQL_DATABASE: nextcloud
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
       SSH_KNOWN_HOSTS: 172.18.0.1
     secrets:
       - backup_server_user_private_key
       - borg_passphrase
-      - db_password
+      - mysql_password
 
 secrets:
 
-  db_password:
-    file: secret_db_password.txt
-  db_root_password:
-    file: secret_db_root_password.txt
+  mysql_password:
+    file: secret_mysql_password.txt
+  mysql_root_password:
+    file: secret_mysql_root_password.txt
   backup_server_user_private_key:
     file: secret_backup_server_user_private_key.txt
   borg_passphrase:
