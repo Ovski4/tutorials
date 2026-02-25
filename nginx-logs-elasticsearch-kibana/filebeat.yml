@@ -1,0 +1,37 @@
+filebeat.config:
+  modules:
+    path: '${path.config}/modules.d/*.yml'
+    reload.enabled: false
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      templates:
+        - condition:
+            contains:
+              # If using a custom nginx image, you will want to update this line.
+              # Example: registry.gitlab.com/user/my-website/my-nginx-website
+              docker.container.image: nginx
+          config:
+            - module: nginx
+              access:
+                enabled: true
+                input:
+                  type: container
+                  stream: stdout
+                  paths:
+                    # By default docker stores its data in /var/lib/docker.
+                    # If you configured docker to use a different folder,
+                    # you will have to adjust this path and the one below.
+                    - '/var/lib/docker/containers/${data.docker.container.id}/*.log'
+              error:
+                enabled: true
+                input:
+                  type: container
+                  stream: stderr
+                  paths:
+                    - '/var/lib/docker/containers/${data.docker.container.id}/*.log'
+
+output.elasticsearch:
+  hosts: 'elasticsearch:9200'
+  pipeline: geoip-info
