@@ -18,7 +18,7 @@ services:
       - mysql_password
 
   php:
-    image: nextcloud:32.0.3-fpm-alpine
+    image: nextcloud:33.0.0-fpm-alpine
     volumes:
       - data:/var/www/html
     depends_on:
